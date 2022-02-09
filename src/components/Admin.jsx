@@ -3,7 +3,7 @@ import React from 'react'
 function Admin() {
   return (
     <div>
-        <h2>Admin</h2>
+        <h1>Admin</h1>
     </div>
   )
 }
