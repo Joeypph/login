@@ -1,18 +1,21 @@
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import React, {useState} from 'react'
 import {auth,createUserWithEmailAndPassword} from '../firebaseconfig'
+import {useNavigate} from 'react-router-dom'
 
 function Login() {
 
+  const historial = useNavigate()
   const[email,setEmail] = useState('')
   const[password,setPassword] = useState('')
   const[msgError,setmsgError] = useState(null)
 
   const registrarUsuario = (e) =>{
     e.preventDefault()
-
     createUserWithEmailAndPassword(auth,email,password)
-    .then(r => alert('Se ha creado el usuario'))
+    .then(r => {
+      historial('/')
+    })
     .catch(e => {
       if(e.code=='auth/invalid-email'){
         setmsgError('Formato de Email incorrecto')
@@ -25,7 +28,9 @@ function Login() {
   }
   const loginUsuario = () =>{
     signInWithEmailAndPassword(auth,email,password)
-    .then((r)=>console.log(r))
+    .then(r => {
+      historial('/')
+    })
     .catch((err)=>{
       console.log(err.code)
       if(err.code=='auth/user-not-found'){
