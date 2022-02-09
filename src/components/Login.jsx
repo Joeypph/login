@@ -5,17 +5,22 @@ function Login() {
 
   const[email,setEmail] = useState('')
   const[password,setPassword] = useState('')
+  const[msgError,setmsgError] = useState(null)
 
   const registrarUsuario = (e) =>{
     e.preventDefault()
-    try{
-      createUserWithEmailAndPassword(auth,email,password)
-      alert('Se ha creado el usuario')
-      setEmail('')
-      setPassword('')
-    }catch(e){
-      console.log(e);
-    }
+
+    createUserWithEmailAndPassword(auth,email,password)
+    .then(r => alert('Se ha creado el usuario'))
+    .catch(e => {
+      if(e.code=='auth/invalid-email'){
+        setmsgError('Formato de Email incorrecto')
+      }
+      else if(e.code=='auth/weak-password'){
+        setmsgError('La contraseña debe tener al menos 6 caracteres o más')
+      }
+
+    })
   }
   return (
     <div className='row '>
@@ -26,21 +31,21 @@ function Login() {
               onChange={(e)=>{setEmail(e.target.value)}}
               className='form-control mt-4'
               placeholder='Introduce el Email'
-              type="text"/>
+              type="email"/>
 
              <input
               onChange={(e)=>{setPassword(e.target.value)}}
               className='form-control mt-4'
               placeholder='Introduce la Contraseña'
               type="password"/>
-              
+
              <input
               className='btn btn-dark mt-4' 
               placeholder='Introduce la Contraseña'
               type="submit"
               value="Registrar Usuario"/>
-
           </form>
+          {msgError != null ? (<div style={{color:'red'}}>{msgError} </div>): (<span></span>) }
       </div>
       <div className='col'></div>
     </div>
